@@ -101,7 +101,7 @@ bool ButterworthFilterPlugin::initialize(rclcpp::Node::SharedPtr node, moveit::c
   {
     // Low-pass filters for the joint positions
     // TODO(andyz): read a parameter
-    position_filters_.emplace_back(1.5 /* filter coefficient, should be >1 */);
+    position_filters_.emplace_back(3.0 /* filter coefficient, should be >1 */);
   }
   return true;
 };
