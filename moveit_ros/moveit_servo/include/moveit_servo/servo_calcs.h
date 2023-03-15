@@ -309,6 +309,9 @@ protected:
   rclcpp::Service<moveit_msgs::srv::ChangeDriftDimensions>::SharedPtr drift_dimensions_server_;
   rclcpp::Service<std_srvs::srv::Empty>::SharedPtr reset_servo_status_;
 
+  // ERH Temp: Because RQT is broken?
+  rclcpp::Publisher<trajectory_msgs::msg::JointTrajectoryPoint>::SharedPtr trajectory_outgoing_point_pub_;
+
   // Main tracking / result publisher loop
   std::thread thread_;
   bool stop_requested_;

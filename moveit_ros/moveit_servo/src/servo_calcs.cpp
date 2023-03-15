@@ -142,6 +142,8 @@ ServoCalcs::ServoCalcs(rclcpp::Node::SharedPtr node,
   {
     trajectory_outgoing_cmd_pub_ = node_->create_publisher<trajectory_msgs::msg::JointTrajectory>(
         parameters_->command_out_topic, rclcpp::SystemDefaultsQoS());
+    trajectory_outgoing_point_pub_ = node_->create_publisher<trajectory_msgs::msg::JointTrajectoryPoint>(
+        "~/trajectory_point", rclcpp::SystemDefaultsQoS());
   }
   else if (parameters_->command_out_type == "std_msgs/Float64MultiArray")
   {
@@ -504,6 +506,10 @@ void ServoCalcs::calculateSingleIteration()
     // (trajectory_msgs/JointTrajectory or std_msgs/Float64MultiArray).
     if (parameters_->command_out_type == "trajectory_msgs/JointTrajectory")
     {
+      // ERH Temp
+      // Publish positions and velocities for rqt plotting
+      trajectory_outgoing_point_pub_->publish(joint_trajectory->points[0]);
+
       // When a joint_trajectory_controller receives a new command, a stamp of 0 indicates "begin immediately"
       // See http://wiki.ros.org/joint_trajectory_controller#Trajectory_replacement
       joint_trajectory->header.stamp = rclcpp::Time(0);
