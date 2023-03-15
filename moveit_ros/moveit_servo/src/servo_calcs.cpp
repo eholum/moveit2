@@ -142,8 +142,16 @@ ServoCalcs::ServoCalcs(rclcpp::Node::SharedPtr node,
   {
     trajectory_outgoing_cmd_pub_ = node_->create_publisher<trajectory_msgs::msg::JointTrajectory>(
         parameters_->command_out_topic, rclcpp::SystemDefaultsQoS());
+
+    // ERH Temp publishers for fun
     trajectory_outgoing_point_pub_ = node_->create_publisher<trajectory_msgs::msg::JointTrajectoryPoint>(
         "~/trajectory_point", rclcpp::SystemDefaultsQoS());
+    cmd_output_point_1_pub_ =
+        node_->create_publisher<sensor_msgs::msg::JointState>("~/cmd_output_point_1_pub", rclcpp::SystemDefaultsQoS());
+    cmd_output_point_2_pub_ =
+        node_->create_publisher<sensor_msgs::msg::JointState>("~/cmd_output_point_2_pub", rclcpp::SystemDefaultsQoS());
+    cmd_output_point_3_pub_ =
+        node_->create_publisher<sensor_msgs::msg::JointState>("~/cmd_output_point_3_pub", rclcpp::SystemDefaultsQoS());
   }
   else if (parameters_->command_out_type == "std_msgs/Float64MultiArray")
   {
@@ -722,9 +730,15 @@ bool ServoCalcs::internalServoUpdate(Eigen::ArrayXd& delta_theta,
   }
   delta_theta *= collision_scale;
 
+  // ERH Point 1: pre computing joint updates
+  cmd_output_point_1_pub_->publish(internal_joint_state_);
+
   // Loop thru joints and update them, calculate velocities, and filter
   if (!applyJointUpdate(delta_theta, internal_joint_state_))
     return false;
+
+  // ERH Point 2: post computing joint updates
+  cmd_output_point_2_pub_->publish(internal_joint_state_);
 
   // Mark the lowpass filters as updated for this cycle
   updated_filters_ = true;
@@ -732,6 +746,9 @@ bool ServoCalcs::internalServoUpdate(Eigen::ArrayXd& delta_theta,
   // Enforce SRDF velocity limits
   enforceVelocityLimits(joint_model_group_, parameters_->publish_period, internal_joint_state_,
                         parameters_->override_velocity_scaling_factor);
+
+  // ERH Point 3: post applying velocity limits
+  cmd_output_point_3_pub_->publish(internal_joint_state_);
 
   // Enforce SRDF position limits, might halt if needed, set prev_vel to 0
   const auto joints_to_halt = enforcePositionLimits(internal_joint_state_);

@@ -311,6 +311,9 @@ protected:
 
   // ERH Temp: Because RQT is broken?
   rclcpp::Publisher<trajectory_msgs::msg::JointTrajectoryPoint>::SharedPtr trajectory_outgoing_point_pub_;
+  rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr cmd_output_point_1_pub_;
+  rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr cmd_output_point_2_pub_;
+  rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr cmd_output_point_3_pub_;
 
   // Main tracking / result publisher loop
   std::thread thread_;
