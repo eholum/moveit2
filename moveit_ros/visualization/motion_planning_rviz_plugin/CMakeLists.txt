@@ -2,8 +2,7 @@ set(HEADERS
     include/moveit/motion_planning_rviz_plugin/motion_planning_display.hpp
     include/moveit/motion_planning_rviz_plugin/motion_planning_frame.hpp
     include/moveit/motion_planning_rviz_plugin/motion_planning_frame_joints_widget.hpp
-    include/moveit/motion_planning_rviz_plugin/motion_planning_param_widget.hpp
-    include/moveit/motion_planning_rviz_plugin/interactive_marker_display.hpp)
+    include/moveit/motion_planning_rviz_plugin/motion_planning_param_widget.hpp)
 qt5_wrap_ui(UIC_FILES src/ui/motion_planning_rviz_plugin_frame.ui
             src/ui/motion_planning_rviz_plugin_frame_joints.ui)
 
@@ -21,7 +20,6 @@ set(SOURCE_FILES
     src/motion_planning_display.cpp
     src/motion_planning_frame_manipulation.cpp
     src/motion_planning_param_widget.cpp
-    src/interactive_marker_display.cpp
     src/icons/icons.qrc)
 
 add_library(moveit_motion_planning_rviz_plugin_core SHARED
